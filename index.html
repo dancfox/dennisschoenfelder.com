@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dennis Schoenfelder — Photographs from the San Luis Valley</title>
+<meta name="description" content="Limited edition archival prints by Dennis Schoenfelder. Nine years of photographs made at the Alamosa National Wildlife Refuge, Colorado.">
+<meta property="og:title" content="Dennis Schoenfelder">
+<meta property="og:description" content="Limited edition photographs from the Alamosa National Wildlife Refuge, Colorado.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --haze:#E4E8E9;
+  --surface:#F4F6F7;
+  --ink:#1A242B;
+  --muted:#5D6A72;
+  --accent:#2E5C7A;
+  --rule:#C7CFD2;
+  --frame:#D6DCDE;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --haze:#0E1418;
+    --surface:#151D23;
+    --ink:#DCE4E7;
+    --muted:#8C9AA3;
+    --accent:#82B4D6;
+    --rule:#25303A;
+    --frame:#1C262E;
+  }
+}
+:root[data-theme="dark"]{
+  --haze:#0E1418;
+  --surface:#151D23;
+  --ink:#DCE4E7;
+  --muted:#8C9AA3;
+  --accent:#82B4D6;
+  --rule:#25303A;
+  --frame:#1C262E;
+}
+
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+
+body{
+  margin:0;
+  background:var(--haze);
+  color:var(--ink);
+  font-family:"Spectral",Georgia,serif;
+  font-size:18px;
+  font-weight:300;
+  line-height:1.65;
+}
+
+.shell{max-width:1120px;margin:0 auto;padding:0 1.5rem;}
+.prose{max-width:34rem;}
+
+/* ---------- header ---------- */
+header.site{
+  border-bottom:1px solid var(--rule);
+}
+header.site .shell{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:1.5rem;padding-top:1.3rem;padding-bottom:1.3rem;flex-wrap:wrap;
+}
+.wordmark{
+  font-size:1.12rem;font-weight:400;letter-spacing:.06em;
+  text-decoration:none;color:var(--ink);
+}
+nav.site{display:flex;gap:1.6rem;}
+nav.site a{
+  color:var(--muted);text-decoration:none;font-size:.94rem;
+  border-bottom:1px solid transparent;padding-bottom:2px;
+}
+nav.site a:hover,nav.site a:focus-visible{color:var(--ink);border-bottom-color:var(--accent);}
+
+/* ---------- hero ---------- */
+.hero{padding:5.5rem 0 3rem;}
+.hero h1{
+  font-size:clamp(2.6rem,8vw,4.6rem);
+  font-weight:200;
+  line-height:1.04;
+  letter-spacing:-.02em;
+  margin:0 0 1.6rem;
+  max-width:14ch;
+}
+.hero .lede{
+  font-size:1.16rem;color:var(--muted);max-width:38rem;margin:0;
+}
+.hero .meta{
+  margin:2.4rem 0 0;font-size:.92rem;color:var(--muted);
+  border-top:1px solid var(--rule);padding-top:1rem;max-width:38rem;
+}
+
+/* ---------- statement ---------- */
+.statement{padding:1rem 0 4.5rem;}
+.statement p{margin:0 0 1.15rem;}
+.statement p:last-child{margin-bottom:0;}
+
+/* ---------- image frames ---------- */
+.plate{padding:0 0 5.5rem;}
+.frame{
+  margin:0;
+  background:var(--frame);
+  border:1px solid var(--rule);
+  overflow:hidden;
+  position:relative;
+}
+.frame img{display:block;width:100%;height:auto;}
+.frame.missing{
+  aspect-ratio:var(--ar,3/2);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:2rem;
+}
+.frame.missing img{display:none;}
+.frame.missing::after{
+  content:attr(data-label);
+  color:var(--accent);
+  font-size:.88rem;
+  letter-spacing:.05em;
+  max-width:26rem;
+  line-height:1.6;
+}
+
+.caption{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:2rem;flex-wrap:wrap;
+  margin-top:1.15rem;
+}
+.caption h2{
+  font-size:1.42rem;font-weight:400;margin:0 0 .3rem;letter-spacing:-.01em;
+}
+.caption .where{color:var(--muted);font-size:.95rem;margin:0;}
+.caption .terms{color:var(--muted);font-size:.9rem;margin:.45rem 0 0;}
+.buy{flex-shrink:0;}
+.buy a{
+  display:inline-block;
+  color:var(--ink);
+  text-decoration:none;
+  border:1px solid var(--accent);
+  padding:.5rem 1.15rem;
+  font-size:.92rem;
+  white-space:nowrap;
+}
+.buy a:hover,.buy a:focus-visible{background:var(--accent);color:var(--surface);}
+.buy .price{display:block;font-size:.88rem;color:var(--muted);margin-top:.5rem;text-align:right;}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+
+/* ---------- text sections ---------- */
+section.text{
+  padding:4rem 0;
+  border-top:1px solid var(--rule);
+}
+section.text h2{
+  font-size:1.9rem;font-weight:300;margin:0 0 1.4rem;letter-spacing:-.015em;
+}
+section.text h3{
+  font-size:1.06rem;font-weight:600;margin:2rem 0 .4rem;
+}
+section.text p{margin:0 0 1.1rem;}
+section.text p:last-child{margin-bottom:0;}
+section.text ul{margin:0 0 1.1rem;padding-left:1.2rem;}
+section.text li{margin-bottom:.45rem;}
+section.text li::marker{color:var(--muted);}
+a.inline{color:var(--accent);}
+
+.contact-line{
+  font-size:1.3rem;margin:1.6rem 0 0;
+}
+.contact-line a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule);}
+.contact-line a:hover{border-bottom-color:var(--accent);}
+
+footer.site{
+  border-top:1px solid var(--rule);
+  padding:2.2rem 0 3.5rem;
+  color:var(--muted);
+  font-size:.88rem;
+}
+footer.site p{margin:0 0 .4rem;}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+@media (max-width:760px){
+  body{font-size:17px;}
+  .shell{padding:0 1.1rem;}
+  .hero{padding:3.4rem 0 2rem;}
+  .plate{padding-bottom:3.6rem;}
+  .pair{grid-template-columns:1fr;}
+  .caption{gap:1rem;}
+  .buy{width:100%;}
+  .buy a{display:block;text-align:center;}
+  .buy .price{text-align:left;}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="shell">
+    <a class="wordmark" href="#top">Dennis Schoenfelder</a>
+    <nav class="site">
+      <a href="#prints">Prints</a>
+      <a href="#editions">About the prints</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="shell hero">
+    <h1>Nine years at one refuge</h1>
+    <p class="lede">Photographs made at the Alamosa National Wildlife Refuge and the flats just east of it, in Colorado's San Luis Valley. Available as signed, limited edition archival prints.</p>
+    <p class="meta">2017&ndash;2026 &nbsp;·&nbsp; Alamosa, Colorado &nbsp;·&nbsp; 7,544 feet</p>
+  </div>
+
+  <div class="shell statement prose">
+    <p>The refuge sits on the floor of the San Luis Valley, with Blanca Peak on the eastern rim. It is the same few square miles every time. The light is never the same twice.</p>
+    <p>I have been photographing here since 2017, mostly before sunrise and after sunset, mostly alone. Some mornings there is fog on the flats. Some evenings the rays come through and then reappear behind you, on the opposite side of the sky. In October 2024 a comet came, and for a few nights the valley had two kinds of light in it at once.</p>
+    <p>These are the pictures I have kept.</p>
+  </div>
+
+  <div id="prints">
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Comet A3 over the Refuge — image to be added">
+        <img src="images/01-comet-a3.jpg" alt="Comet C/2023 A3 above the San Luis Valley, October 2024" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Comet A3 over the Refuge</h2>
+          <p class="where">October 25, 2024 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered<br>Print 1 of 25 sold &nbsp;·&nbsp; 24 remaining at the opening price</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Comet%20A3%20over%20the%20Refuge">Inquire about this print</a>
+          <span class="price">From $1,000</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/1" data-label="Blanca at Sunrise, Panorama — image to be added">
+        <img src="images/02-blanca-panorama.jpg" alt="Panoramic sunrise over Blanca Peak from the wildlife refuge" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Blanca at Sunrise, Panorama</h2>
+          <p class="where">June 21, 2017 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Blanca%20at%20Sunrise%2C%20Panorama">Inquire about this print</a>
+          <span class="price">From $1,000</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Crepuscular Rays — image to be added">
+        <img src="images/03-crepuscular-rays.jpg" alt="Crepuscular rays over the Alamosa wildlife refuge" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Crepuscular Rays</h2>
+          <p class="where">June 11, 2024 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Crepuscular%20Rays">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Sun Rays, Evening — image to be added">
+        <img src="images/04-sun-rays.jpg" alt="Sun rays over the refuge at evening" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Sun Rays, Evening</h2>
+          <p class="where">June 11, 2024 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Sun%20Rays%2C%20Evening">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Low Fog — image to be added">
+        <img src="images/05-low-fog.jpg" alt="Low fog across the refuge flats" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Low Fog</h2>
+          <p class="where">September 5, 2021 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Low%20Fog">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Blanca at Sunrise — image to be added">
+        <img src="images/06-blanca-sunrise.jpg" alt="Sunrise on Blanca Peak seen from the refuge" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Blanca at Sunrise</h2>
+          <p class="where">February 8, 2021 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Blanca%20at%20Sunrise">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Blanca, Close — image to be added">
+        <img src="images/07-blanca-close.jpg" alt="Tight view of Blanca Peak at sunrise" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Blanca, Close</h2>
+          <p class="where">February 8, 2021 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Blanca%2C%20Close">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Windmill at Sunset — image to be added">
+        <img src="images/08-windmill.jpg" alt="Windmill silhouetted at sunset on the refuge" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Windmill at Sunset</h2>
+          <p class="where">January 12, 2018 &nbsp;·&nbsp; Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Windmill%20at%20Sunset">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Tree at Sunrise — image to be added">
+        <img src="images/09-tree-sunrise.jpg" alt="Tree silhouetted against sunrise at the refuge" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Tree at Sunrise</h2>
+          <p class="where">Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Tree%20at%20Sunrise">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <figure class="frame" style="--ar:3/2" data-label="Deer — image to be added">
+        <img src="images/10-deer.jpg" alt="Deer near the wildlife refuge" onerror="this.parentNode.classList.add('missing')">
+      </figure>
+      <div class="caption">
+        <div>
+          <h2>Deer</h2>
+          <p class="where">April 2, 2017 &nbsp;·&nbsp; near the Alamosa National Wildlife Refuge</p>
+          <p class="terms">Edition of 25 &nbsp;·&nbsp; archival pigment print &nbsp;·&nbsp; signed and numbered</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20Deer">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell plate">
+      <div class="pair">
+        <figure class="frame" style="--ar:3/2" data-label="The Well, color — image to be added">
+          <img src="images/11-well-color.jpg" alt="A well east of the refuge, in color" onerror="this.parentNode.classList.add('missing')">
+        </figure>
+        <figure class="frame" style="--ar:3/2" data-label="The Well, black and white — image to be added">
+          <img src="images/12-well-bw.jpg" alt="A well east of the refuge, in black and white" onerror="this.parentNode.classList.add('missing')">
+        </figure>
+      </div>
+      <div class="caption">
+        <div>
+          <h2>The Well</h2>
+          <p class="where">East of the Alamosa National Wildlife Refuge</p>
+          <p class="terms">Available in color or black and white &nbsp;·&nbsp; separate editions of 25 each</p>
+        </div>
+        <div class="buy">
+          <a href="mailto:prints@dennisschoenfelder.com?subject=Print%20inquiry%3A%20The%20Well">Inquire about this print</a>
+          <span class="price">From $850</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="shell">
+    <section class="text" id="editions">
+      <div class="prose">
+        <h2>About the prints</h2>
+        <p>Every print is made on archival cotton or baryta paper with pigment inks, rated to last well beyond a hundred years without fading. Each one is signed and numbered on the reverse and comes with a certificate of authenticity carrying a matching security seal.</p>
+
+        <h3>Editions are limited and permanent</h3>
+        <p>Each image is issued in an edition of 25 at its large size. When the edition sells out, it is finished &mdash; no reissue, no second edition, no slightly different version. Smaller sizes are offered as their own separate, smaller-priced editions.</p>
+
+        <h3>The price rises as the edition sells</h3>
+        <p>Prints 1 through 5 are offered at the opening price. Prints 6 through 15 are higher, and 16 through 25 higher again. Buying early costs less, and it always will.</p>
+
+        <h3>What arrives</h3>
+        <ul>
+          <li>The signed and numbered print</li>
+          <li>A certificate of authenticity with a matching serial seal</li>
+          <li>A note of where and when the photograph was made</li>
+        </ul>
+        <p>Prints ship rolled in a tube by default, which is safest for large sizes and keeps shipping affordable. Mounting and framing can be arranged and quoted separately. Shipping is billed at cost.</p>
+
+        <h3>Custom sizes</h3>
+        <p>Most of this work was made to print large. If you have a specific wall in mind, say so in your message and I will tell you honestly whether the file will hold up at that size.</p>
+      </div>
+    </section>
+
+    <section class="text" id="contact">
+      <div class="prose">
+        <h2>Contact</h2>
+        <p>Prints are sold directly. Send a note with the title you are interested in and roughly what size you have in mind, and you will get a straight answer on price, timing, and shipping.</p>
+        <p class="contact-line"><a href="mailto:prints@dennisschoenfelder.com">prints@dennisschoenfelder.com</a></p>
+        <p style="margin-top:1.6rem;color:var(--muted);font-size:.95rem;">Dennis Schoenfelder lives in Alamosa, Colorado. His photographs have appeared in EarthSky's community collection.</p>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer class="site">
+  <div class="shell">
+    <p>&copy; 2026 Dennis Schoenfelder. All photographs are the property of the photographer and may not be reproduced without permission.</p>
+    <p>Alamosa, Colorado</p>
+  </div>
+</footer>
+
+</body>
+</html>

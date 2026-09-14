@@ -12,8 +12,10 @@
 #   4. Creates/reuses a CloudFront distribution fronting the bucket via an
 #      Origin Access Control (OAC); the bucket stays private.
 #   5. Attaches a bucket policy scoped to that one distribution.
-#   6. Syncs ./ (site files) to the bucket with sensible cache headers.
-#   7. Invalidates the CloudFront cache.
+#   6. Syncs ./ (site files) to the bucket with sensible cache headers:
+#      images/ long-cached and immutable, other root assets (favicon,
+#      robots.txt, og image, …) hourly, index.html short-cached.
+#   7. Invalidates only the paths this run actually changed.
 #   8. Prints the DNS records to point the domain at CloudFront.
 #
 # Re-runs are safe: existing resources are detected and reused, and normally
@@ -218,17 +220,55 @@ if [[ "$SYNC_ONLY" == true ]]; then
 fi
 
 log "Syncing site files to s3://${BUCKET}…"
+
+# Sync output is captured so the invalidation below can target only what
+# changed; it is echoed straight back so the log still shows every transfer.
 # Long-cache the immutable image assets…
-aws s3 sync "${SITE_DIR}/images/" "s3://${BUCKET}/images/" \
+IMG_OUT="$(aws s3 sync "${SITE_DIR}/images/" "s3://${BUCKET}/images/" \
   --delete --cache-control "public, max-age=31536000, immutable" \
-  --exclude ".*"
+  --exclude ".*" --no-progress)"
+[[ -n "$IMG_OUT" ]] && printf '%s\n' "$IMG_OUT"
+
+# …deploy the rest of the site root too (favicon.ico, robots.txt, the og
+# image, any future page), skipping repo plumbing and the two prefixes that
+# get their own cache headers above and below. Without this, anything added
+# at the root would silently never reach the bucket.
+ROOT_OUT="$(aws s3 sync "${SITE_DIR}/" "s3://${BUCKET}/" \
+  --delete --cache-control "public, max-age=3600" \
+  --exclude ".*" \
+  --exclude ".git/*" \
+  --exclude ".deploy.env" \
+  --exclude "images/*" \
+  --exclude "index.html" \
+  --exclude "deploy.sh" \
+  --exclude "*.md" --no-progress)"
+[[ -n "$ROOT_OUT" ]] && printf '%s\n' "$ROOT_OUT"
+
 # …short-cache the HTML so edits go live quickly.
 aws s3 cp "${SITE_DIR}/index.html" "s3://${BUCKET}/index.html" \
   --cache-control "public, max-age=300" --content-type "text/html; charset=utf-8"
 
-log "Invalidating CloudFront cache…"
+# Invalidate index.html (always, since it is re-uploaded every run) plus any
+# long-cached asset this run added, changed, or removed. A blanket /* would
+# purge the year-long image cache on every deploy, forcing CloudFront to
+# re-pull megabytes from S3 to serve bytes it already had.
+INVAL_PATHS=("/index.html")
+while IFS= read -r key; do
+  [[ -n "$key" ]] && INVAL_PATHS+=("/${key}")
+done < <(printf '%s\n%s\n' "$IMG_OUT" "$ROOT_OUT" \
+  | sed -nE "s#^(upload|copy|delete): .*s3://${BUCKET}/(.+)\$#\2#p" \
+  | sort -u)
+
+# Past ~15 paths a wildcard is cheaper than enumerating them (CloudFront
+# bills per path, and /* counts as one).
+if (( ${#INVAL_PATHS[@]} > 15 )); then
+  log "${#INVAL_PATHS[@]} paths changed — invalidating /* instead."
+  INVAL_PATHS=("/*")
+fi
+
+log "Invalidating ${#INVAL_PATHS[@]} path(s): ${INVAL_PATHS[*]}"
 INVAL_ID="$(aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
-  --paths "/*" --query Invalidation.Id --output text)"
+  --paths "${INVAL_PATHS[@]}" --query Invalidation.Id --output text)"
 log "Invalidation ${INVAL_ID} created."
 
 # =================================================================== summary ==

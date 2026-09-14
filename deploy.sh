@@ -28,18 +28,36 @@
 set -euo pipefail
 
 # ------------------------------------------------------------------ config ---
-AWS_PROFILE="${AWS_PROFILE:-personal}"   # profile that maps to the account below
 EXPECTED_ACCOUNT="594041868357"
 DOMAIN="dennisschoenfelder.com"
 ALT_DOMAIN="www.${DOMAIN}"
-BUCKET="${DOMAIN}"                        # bucket is private; name is just a label
+BUCKET="${BUCKET:-${DOMAIN}}"             # bucket is private; name is just a label
 REGION="us-east-1"                        # ACM for CloudFront MUST be us-east-1
 SITE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CF_COMMENT="${DOMAIN} static site"
 OAC_NAME="${DOMAIN}-oac"
 
-export AWS_PROFILE AWS_DEFAULT_REGION="$REGION"
-aws() { command aws --profile "$AWS_PROFILE" --region "$REGION" "$@"; }
+# Locally this runs under a named profile. Under GitHub Actions the OIDC
+# action puts short-lived credentials in the environment and there is no
+# profile to name — passing --profile there would fail every call — so the
+# flag is only added when a profile is actually in play.
+if [[ -n "${AWS_PROFILE:-}" ]]; then
+  CRED_DESC="profile: ${AWS_PROFILE}"                     # caller named one
+elif [[ -n "${AWS_ACCESS_KEY_ID:-}${AWS_ROLE_ARN:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
+  AWS_PROFILE=""; CRED_DESC="credentials from the environment"
+else
+  AWS_PROFILE="personal"; CRED_DESC="profile: personal"   # local default
+fi
+
+PROFILE_ARGS=()
+if [[ -n "$AWS_PROFILE" ]]; then
+  PROFILE_ARGS=(--profile "$AWS_PROFILE"); export AWS_PROFILE
+else
+  unset AWS_PROFILE
+fi
+
+export AWS_DEFAULT_REGION="$REGION"
+aws() { command aws ${PROFILE_ARGS[@]+"${PROFILE_ARGS[@]}"} --region "$REGION" "$@"; }
 
 log()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[!]\033[0m %s\n' "$*" >&2; }
@@ -52,10 +70,10 @@ SYNC_ONLY=false
 command -v aws >/dev/null || die "aws CLI not found."
 command -v jq  >/dev/null || die "jq not found (brew install jq)."
 
-log "Verifying credentials for account ${EXPECTED_ACCOUNT} (profile: ${AWS_PROFILE})…"
+log "Verifying credentials for account ${EXPECTED_ACCOUNT} (${CRED_DESC})…"
 ACCOUNT="$(aws sts get-caller-identity --query Account --output text 2>/dev/null || true)"
-[[ -n "$ACCOUNT" ]] || die "Could not authenticate with profile '${AWS_PROFILE}'. Refresh its credentials, or set AWS_PROFILE=<profile>."
-[[ "$ACCOUNT" == "$EXPECTED_ACCOUNT" ]] || die "Profile '${AWS_PROFILE}' is account ${ACCOUNT}, expected ${EXPECTED_ACCOUNT}. Aborting to avoid deploying to the wrong account."
+[[ -n "$ACCOUNT" ]] || die "Could not authenticate (${CRED_DESC}). Refresh the credentials, or set AWS_PROFILE=<profile>."
+[[ "$ACCOUNT" == "$EXPECTED_ACCOUNT" ]] || die "Authenticated to account ${ACCOUNT}, expected ${EXPECTED_ACCOUNT} (${CRED_DESC}). Aborting to avoid deploying to the wrong account."
 log "Authenticated to ${ACCOUNT}."
 
 # =============================================================== provision ===
@@ -214,9 +232,13 @@ fi
 
 # =================================================================== deploy ===
 if [[ "$SYNC_ONLY" == true ]]; then
-  [[ -f "${SITE_DIR}/.deploy.env" ]] || die "--sync-only needs a prior full run (.deploy.env missing)."
-  # shellcheck disable=SC1091
-  source "${SITE_DIR}/.deploy.env"
+  # .deploy.env is written by a full local run and is gitignored, so a CI
+  # checkout never has one; there DIST_ID arrives from the environment.
+  if [[ -f "${SITE_DIR}/.deploy.env" ]]; then
+    # shellcheck disable=SC1091
+    source "${SITE_DIR}/.deploy.env"
+  fi
+  [[ -n "${DIST_ID:-}" ]] || die "--sync-only needs DIST_ID: run a full deploy first (writes .deploy.env), or set DIST_ID in the environment."
 fi
 
 log "Syncing site files to s3://${BUCKET}…"

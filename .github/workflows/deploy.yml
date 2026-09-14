@@ -1,0 +1,52 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+    # Docs-only commits should not republish the site. Everything else can:
+    # deploy.sh now syncs the whole site root, so a new favicon or og image
+    # added at the top level must still trigger a run.
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  workflow_dispatch:
+
+# Runs share one bucket, so they must not overlap. A queued run waits rather
+# than cancelling: interrupting a sync could leave the bucket holding a
+# half-uploaded set of files.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write        # required to mint the OIDC token traded for AWS creds
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Referencing an environment moves the OIDC subject claim to
+    # repo:OWNER/REPO:environment:production — the IAM trust policy in
+    # DEPLOY.md matches that form, so the two must be changed together.
+    environment:
+      name: production
+      url: https://dennisschoenfelder.com
+
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+
+      - name: Assume the deploy role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+          role-session-name: gh-deploy-${{ github.run_id }}
+
+      # --sync-only deliberately: provisioning (ACM, CloudFront, Route 53) is
+      # a one-time human operation needing far broader IAM rights than the
+      # deploy role holds.
+      - name: Sync to S3 and invalidate CloudFront
+        env:
+          DIST_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: ./deploy.sh --sync-only

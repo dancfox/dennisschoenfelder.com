@@ -15,7 +15,15 @@ profile — and are still the way to provision or change infrastructure.
 
 ## One-time AWS setup
 
-All of this happens in account **594041868357**, once.
+Run it in one command, on any machine with your `personal` AWS profile:
+
+```bash
+./tools/setup-github-oidc.sh
+```
+
+That does sections 1-3 below idempotently and prints the two secret values.
+The sections remain as a description of what it creates, and for doing it by
+hand. All of it happens in account **594041868357**, once.
 
 ### 1. Register GitHub as an OIDC identity provider
 

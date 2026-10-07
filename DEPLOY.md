@@ -162,7 +162,7 @@ before firing them.
 
 | Symptom | Cause |
 | --- | --- |
-| `Not authorized to perform sts:AssumeRoleWithWebIdentity` | The `sub` in the trust policy does not match. Check it uses the `environment:production` form. |
+| `Not authorized to perform sts:AssumeRoleWithWebIdentity` | Either the OIDC provider lacks the `sts.amazonaws.com` audience (common when the provider already existed for some other purpose), or the trust policy's `sub` does not match the `environment:production` form. Re-run `./tools/setup-github-oidc.sh`: it now repairs the audience and prints both values. |
 | `Could not authenticate` | The role assumption step did not run, or `AWS_DEPLOY_ROLE_ARN` is unset. |
 | `Authenticated to account NNN, expected 594041868357` | The role lives in the wrong account. |
 | `--sync-only needs DIST_ID` | `CLOUDFRONT_DISTRIBUTION_ID` is unset or misnamed. |

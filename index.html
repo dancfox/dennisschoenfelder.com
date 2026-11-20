@@ -84,7 +84,7 @@ header.site .shell{
 /* The mark carries the identity; the name stays live text so it scales,
    stays selectable and readable aloud, and follows the theme. */
 .wordmark img{height:1.75rem;width:auto;display:block;}
-footer.site .mark{height:2.6rem;width:auto;display:block;margin:0 0 1rem;opacity:.9;}
+footer.site .mark{width:200px;height:auto;display:block;margin:0 0 1.2rem;}
 nav.site{display:flex;gap:1.6rem;}
 nav.site a{
   color:var(--muted);text-decoration:none;font-size:.94rem;
@@ -217,7 +217,7 @@ footer.site p{margin:0 0 .4rem;}
 
 <header class="site">
   <div class="shell">
-    <a class="wordmark" href="#top"><img src="images/logo-mark.png" alt="" width="719" height="240" decoding="async"><span>Dennis Schoenfelder</span></a>
+    <a class="wordmark" href="#top"><img src="images/logo-mark.svg" alt="" width="1091" height="385" decoding="async"><span>Dennis Schoenfelder</span></a>
     <nav class="site">
       <a href="#prints">Prints</a>
       <a href="#editions">About the prints</a>
@@ -493,7 +493,10 @@ footer.site p{margin:0 0 .4rem;}
 
 <footer class="site">
   <div class="shell">
-    <img class="mark" src="images/logo-mark.png" alt="" width="719" height="240" loading="lazy" decoding="async">
+    <picture>
+      <source srcset="images/logo-dark.svg" media="(prefers-color-scheme: dark)">
+      <img class="mark" src="images/logo.svg" alt="Dennis Schoenfelder Photography" width="1091" height="594" loading="lazy" decoding="async">
+    </picture>
     <p>&copy; 2026 Dennis Schoenfelder. All photographs are the property of the photographer and may not be reproduced without permission.</p>
     <p>Alamosa, Colorado</p>
   </div>

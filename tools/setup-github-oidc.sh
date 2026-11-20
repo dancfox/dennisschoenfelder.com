@@ -36,9 +36,23 @@ ACCOUNT="$(aws sts get-caller-identity --query Account --output text 2>/dev/null
 log "Authenticated to ${ACCOUNT}."
 
 # ---- 1. OIDC identity provider (account-wide; may already exist) ----------
+# An existing provider is not necessarily a usable one: if it was created for
+# some other purpose without sts.amazonaws.com in its client ID list, the aud
+# condition below never matches and the role refuses the token with
+# "Not authorized to perform sts:AssumeRoleWithWebIdentity".
 PROVIDER="arn:aws:iam::${ACCOUNT}:oidc-provider/token.actions.githubusercontent.com"
 if aws iam get-open-id-connect-provider --open-id-connect-provider-arn "$PROVIDER" >/dev/null 2>&1; then
-  log "OIDC provider already registered."
+  AUDS="$(aws iam get-open-id-connect-provider \
+    --open-id-connect-provider-arn "$PROVIDER" \
+    --query 'ClientIDList' --output text)"
+  if grep -qw "sts.amazonaws.com" <<<"$AUDS"; then
+    log "OIDC provider already registered (audience present)."
+  else
+    log "OIDC provider exists but lacks the sts.amazonaws.com audience — adding it…"
+    aws iam add-client-id-to-open-id-connect-provider \
+      --open-id-connect-provider-arn "$PROVIDER" \
+      --client-id sts.amazonaws.com
+  fi
 else
   log "Registering GitHub as an OIDC provider…"
   aws iam create-open-id-connect-provider \
@@ -98,6 +112,20 @@ aws iam put-role-policy --role-name "$ROLE" --policy-name site-deploy \
 log "Permissions attached."
 
 ROLE_ARN="$(aws iam get-role --role-name "$ROLE" --query Role.Arn --output text)"
+
+# Echo what is actually in place. If a deploy still fails with
+# "Not authorized to perform sts:AssumeRoleWithWebIdentity", these two lines
+# are what to compare: the audience must contain sts.amazonaws.com, and the
+# subject must equal the workflow's repo + environment exactly.
+log "Verifying what was configured:"
+printf '    provider audiences : %s\n' \
+  "$(aws iam get-open-id-connect-provider --open-id-connect-provider-arn "$PROVIDER" \
+     --query 'ClientIDList' --output text)"
+printf '    trust subject      : %s\n' \
+  "$(aws iam get-role --role-name "$ROLE" \
+     --query 'AssumeRolePolicyDocument.Statement[0].Condition.StringEquals."token.actions.githubusercontent.com:sub"' \
+     --output text)"
+printf '    expected subject   : %s\n' "$SUB"
 
 cat <<OUT
 

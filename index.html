@@ -79,7 +79,12 @@ header.site .shell{
 .wordmark{
   font-size:1.12rem;font-weight:400;letter-spacing:.06em;
   text-decoration:none;color:var(--ink);
+  display:inline-flex;align-items:center;gap:.6rem;
 }
+/* The mark carries the identity; the name stays live text so it scales,
+   stays selectable and readable aloud, and follows the theme. */
+.wordmark img{height:1.75rem;width:auto;display:block;}
+footer.site .mark{height:2.6rem;width:auto;display:block;margin:0 0 1rem;opacity:.9;}
 nav.site{display:flex;gap:1.6rem;}
 nav.site a{
   color:var(--muted);text-decoration:none;font-size:.94rem;
@@ -88,7 +93,7 @@ nav.site a{
 nav.site a:hover,nav.site a:focus-visible{color:var(--ink);border-bottom-color:var(--accent);}
 
 /* ---------- hero ---------- */
-.hero{padding:5.5rem 0 3rem;}
+.hero{padding:2.6rem 0 2.2rem;}
 .hero h1{
   font-size:clamp(2.6rem,8vw,4.6rem);
   font-weight:200;
@@ -106,7 +111,7 @@ nav.site a:hover,nav.site a:focus-visible{color:var(--ink);border-bottom-color:v
 }
 
 /* ---------- statement ---------- */
-.statement{padding:1rem 0 4.5rem;}
+.statement{padding:0 0 5rem;}
 .statement p{margin:0 0 1.15rem;}
 .statement p:last-child{margin-bottom:0;}
 
@@ -212,7 +217,7 @@ footer.site p{margin:0 0 .4rem;}
 
 <header class="site">
   <div class="shell">
-    <a class="wordmark" href="#top">Dennis Schoenfelder</a>
+    <a class="wordmark" href="#top"><img src="images/logo-mark.png" alt="" width="719" height="240" decoding="async"><span>Dennis Schoenfelder</span></a>
     <nav class="site">
       <a href="#prints">Prints</a>
       <a href="#editions">About the prints</a>
@@ -227,12 +232,6 @@ footer.site p{margin:0 0 .4rem;}
     <h1>Nine years at one refuge</h1>
     <p class="lede">Photographs made at the Alamosa National Wildlife Refuge and the flats just east of it, in Colorado's San Luis Valley. Available as signed, limited edition archival prints.</p>
     <p class="meta">2017&ndash;2026 &nbsp;·&nbsp; Alamosa, Colorado &nbsp;·&nbsp; 7,544 feet</p>
-  </div>
-
-  <div class="shell statement prose">
-    <p>The refuge sits on the floor of the San Luis Valley, with Blanca Peak on the eastern rim. It is the same few square miles every time. The light is never the same twice.</p>
-    <p>I have been photographing here since 2017, mostly before sunrise and after sunset, mostly alone. Some mornings there is fog on the flats. Some evenings the rays come through and then reappear behind you, on the opposite side of the sky. In October 2024 a comet came, and for a few nights the valley had two kinds of light in it at once.</p>
-    <p>These are the pictures I have kept.</p>
   </div>
 
   <div id="prints">
@@ -253,6 +252,12 @@ footer.site p{margin:0 0 .4rem;}
           <span class="price">From $1,000</span>
         </div>
       </div>
+    </div>
+
+    <div class="shell statement prose">
+    <p>The refuge sits on the floor of the San Luis Valley, with Blanca Peak on the eastern rim. It is the same few square miles every time. The light is never the same twice.</p>
+    <p>I have been photographing here since 2017, mostly before sunrise and after sunset, mostly alone. Some mornings there is fog on the flats. Some evenings the rays come through and then reappear behind you, on the opposite side of the sky. In October 2024 a comet came, and for a few nights the valley had two kinds of light in it at once.</p>
+    <p>These are the pictures I have kept.</p>
     </div>
 
     <div class="shell plate">
@@ -488,6 +493,7 @@ footer.site p{margin:0 0 .4rem;}
 
 <footer class="site">
   <div class="shell">
+    <img class="mark" src="images/logo-mark.png" alt="" width="719" height="240" loading="lazy" decoding="async">
     <p>&copy; 2026 Dennis Schoenfelder. All photographs are the property of the photographer and may not be reproduced without permission.</p>
     <p>Alamosa, Colorado</p>
   </div>
